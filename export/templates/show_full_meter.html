@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+            <div class="row">
+                <div class="col-10">
+                    <h1>Meter - Full Detail from WMIS: {{ meter_id }}</h1>
+                </div>
+            </div>
+            <div class="row heading">
+                <div class="col-4">Field</div>
+                <div class="col-8">Value</div>
+            </div> <!-- row -->
+
+        {% for k,v in meter.items %}
+            <div class="row">
+                <div class="col-4">{{ k }}</div>
+                <div class="col-8">{{ v }}</div>
+            </div> <!-- row -->
+        {% endfor %}
+    </div> <!-- container -->
+    <hr>
+    <a href="{% url 'show_meters' %}">Back to list</a>
+{% endblock %}

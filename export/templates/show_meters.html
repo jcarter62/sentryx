@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+            <div class="row">
+                <div class="col-10">
+                    <h1>Meter List:</h1>
+                </div>
+                <div class="col-1" id="export1">
+                    <a href="{% url 'export-2-excel' %}" class="btn">
+                        <img src="{% static 'microsoft-excel.svg' %}" title="Excel Export" alt="Excel Export" width="20" height="20">
+                    </a>
+                </div>
+                <div class="col-1" id="export2">
+                    <a href="{% url 'export-2-csv' %}" class="btn">
+                        <img src="{% static 'table-arrow-down.svg' %}" title="CSV Export" alt="CSV Export" width="20" height="20">
+                    </a>
+                </div>
+
+            </div>
+
+            {% for m in page_obj %}
+                <div class="row" onclick='rowClick("{{ m.socket_id }}");'>
+                        <div class="col-2">{{ m.socket_id }}</div>
+                        <div class="col-2">{{ m.meter_serial_number }}</div>
+                        <div class="col-8">{{ m.meter_address_1 }}</div>
+                </div> <!-- row -->
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo;&nbsp;</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">&nbsp;&larr;&nbsp;</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">&nbsp;&rarr;&nbsp;</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">&nbsp;&raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            <hr>
+        <hr>
+    </div> <!-- container -->
+    <script type="text/javascript">
+        function rowClick(id) {
+            let url = "{% url 'show_meter' 'ZZZ' %}".replace("ZZZ", id);
+            window.location = url;
+        }
+    </script>
+{% endblock %}

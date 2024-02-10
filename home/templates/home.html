@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <br>
+    <style>
+    /* Target the anchor (link) elements and apply the following styles */
+    a {
+      color: black; /* Change the color to black (or any color you prefer) */
+      text-decoration: none; /* Remove the underline */
+    }
+
+    /* Optionally, you can add styles for visited links as well */
+    a:visited {
+      {#color: purple; /* Change the color of visited links (if desired) */#}
+        color: black;
+    }
+    </style>
+
+    <div class="row">
+    Sentryx Data Management System
+    </div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-10">
+                <h1>Meter: {{ meter_id }}</h1>
+            </div>
+        </div>
+        <div class="row heading">
+            <div class="col-4">Field</div>
+            <div class="col-8">Value</div>
+        </div> <!-- row -->
+
+        {% for k,v in meter.items %}
+            <div class="row">
+                <div class="col-4">{{ k }}</div>
+                <div class="col-8">{{ v }}</div>
+            </div> <!-- row -->
+        {% endfor %}
+    </div> <!-- container -->
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <a href="{% url 'show_meters' %}">Back to list</a>
+        </div>
+        <div class="col-4">
+            <a href="{% url 'show_full_meter' meter_id %}">Full Meter Details from WMIS</a>
+        </div>
+    </div>
+
+{% endblock %}
