@@ -13,5 +13,6 @@ class Plotting:
         # fig = px.line(data, x='yearmonth', y='metered')
         fig = px.bar(data, x='yearmonth', y='metered', title='Meter Readings for ' + id, labels={'metered': 'ACFT', 'yearmonth': 'Month'})
         fig.write_html(dest_file)
-        rel_path = dest_file.split('sentryx')[1]
+        # return the relative path to the file
+        rel_path = '/static' + dest_file.split('static')[1]
         return rel_path
