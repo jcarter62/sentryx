@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 import io
 import pandas as pd
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from decouple import config
 from export.plotting import Plotting
 
@@ -112,8 +112,10 @@ def show_one_meter_detail(request, meter_id):
     meter = get_one_meter(meter_id)
     meter_readings = get_meter_readings(meter_id)
     dest_folder = config('PLOTDEST', default='')
-    plotting = Plotting()
-    plot_file = plotting.plot_readings(meter_id, meter_readings, dest_folder)
+    # plotting = Plotting()
+    # plot_file = plotting.plot_readings(meter_id, meter_readings, dest_folder)
+    plot_file = ''
+
 
     sgma_usage = get_sgma_usage(meter_id)
     return render(request,
@@ -213,3 +215,20 @@ def objects_to_csv_in_memory(objects):
     csv_file.seek(0)
 
     return csv_file
+
+
+def generate_meter_plot(request, meter_id):
+
+    try:
+        meter_readings = get_meter_readings(meter_id)
+        dest_folder = config('PLOTDEST', default='')
+        plotting = Plotting()
+        plotfile = plotting.plot_readings(meter_id, meter_readings, dest_folder)
+        code = 200
+    except Exception as e:
+        print(e.message.__str__())
+        code = 500
+        plotfile = ''
+    finally:
+        data = {"plotfile": plotfile, "code": code }
+        return JsonResponse(data)

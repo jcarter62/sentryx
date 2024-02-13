@@ -28,14 +28,8 @@
             <a href="{% url 'show_full_meter' meter_id %}">Full Meter Details from WMIS</a>
         </div>
     </div>
-    <div class="row">
-        <iframe src="{{ plot_file }}"
-                height="400"
-                loading="eager"
-                title="Meter Plot"
-        >
-
-        </iframe>
+    <div class="row" id="MeterPlot">
+        <!-- Plot will be loaded here -->
     </div>
     <hr>
     {% if sgma_usage_len > 0 %}
@@ -71,8 +65,24 @@
         </div>
     {% endif %}
 
+    <script type="text/javascript">
 
+        function load_meter_plot(id) {
+            let url = "/export/generate-meter-plot/" + id;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let plot_id = document.getElementById("MeterPlot");
+                    if ( data.plotfile > "" ) {
+                        plot_id.innerHTML = "" +
+                            '        <iframe src="' + data.plotfile + '" ' +
+                            'height="400" loading="eager" title="Meter Plot" > </iframe>';
+                    }
+                });
+        }
 
+        load_meter_plot("{{ meter_id }}");
 
+    </script>
 
 {% endblock %}
