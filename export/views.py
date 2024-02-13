@@ -6,7 +6,7 @@ import io
 import pandas as pd
 from django.http import HttpResponse
 from decouple import config
-
+from export.plotting import Plotting
 
 def export_view(request):
     return render(request, "export.html", {})
@@ -53,6 +53,34 @@ def get_one_full_meter(meter_id):
     return meter
 
 
+def get_meter_readings(meter_id):
+    import requests
+    api = config('SENTRYXAPI', default='')
+    url = api + '/api/v1/meter-readings/' + meter_id
+    headers = {'Content-Type': 'application/json'}
+    r = requests.request('GET', url, headers=headers)
+    result = r.status_code
+    if result == 200:
+        meter_readings = r.json()['data']
+    else:
+        meter_readings = []
+    return meter_readings
+
+
+def get_sgma_usage(meter_id):
+    import requests
+    api = config('SENTRYXAPI', default='')
+    url = api + '/api/v1/sgma-usage/' + meter_id
+    headers = {'Content-Type': 'application/json'}
+    r = requests.request('GET', url, headers=headers)
+    result = r.status_code
+    if result == 200:
+        sgma_usage = r.json()['data']
+    else:
+        sgma_usage = []
+    return sgma_usage
+
+
 @login_required
 def export_show_meters(request):
     # load search term from request.COOKIES
@@ -80,8 +108,22 @@ def export_show_meters(request):
 
 @login_required
 def show_one_meter_detail(request, meter_id):
+
     meter = get_one_meter(meter_id)
-    return render(request, "show_meter.html", {'meter_id': meter_id,'meter': meter})
+    meter_readings = get_meter_readings(meter_id)
+    dest_folder = config('PLOTDEST', default='')
+    plotting = Plotting()
+    plot_file = plotting.plot_readings(meter_id, meter_readings, dest_folder)
+
+    sgma_usage = get_sgma_usage(meter_id)
+    return render(request,
+                  "show_meter.html",
+                  {'meter_id': meter_id,'meter': meter,
+                   'meter_readings': meter_readings,
+                   'sgma_usage': sgma_usage, 'sgma_usage_len': len(sgma_usage),
+                     'plot_file': plot_file
+                   })
+
 
 @login_required
 def show_one_full_meter_detail(request, meter_id):

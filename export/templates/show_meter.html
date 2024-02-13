@@ -28,5 +28,51 @@
             <a href="{% url 'show_full_meter' meter_id %}">Full Meter Details from WMIS</a>
         </div>
     </div>
+    <div class="row">
+        <iframe src="http://localhost:8000{{ plot_file }}"
+                height="400"
+                loading="eager"
+                title="Meter Plot"
+        >
+
+        </iframe>
+    </div>
+    <hr>
+    {% if sgma_usage_len > 0 %}
+    <div class="container">
+        <div class="row">
+            <div class="col-10">
+                Water Transactions for: {{ meter_id }}
+            </div>
+        </div>
+        <div class="row heading">
+            <div class="col-3">Account</div>
+            <div class="col-4">Type</div>
+            <div class="col-3">Period</div>
+            <div class="col-1">Amount</div>
+        </div> <!-- row -->
+
+        {% for s in sgma_usage %}
+            <div class="row">
+                <div class="col-3">{{ s.account }}: {{ s.fullname }}</div>
+                <div class="col-4">{{ s.code_id }}: {{ s.code }}</div>
+                <div class="col-3">{{ s.description }}</div>
+                <div class="col-1">{{ s.amount }}</div>
+            </div> <!-- row -->
+        {% endfor %}
+    </div> <!-- container -->
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-10">
+                    No SGMA Transactions for: {{ meter_id }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+
+
 
 {% endblock %}
