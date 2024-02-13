@@ -2,7 +2,6 @@ django
 django-import-export
 django-crispy-forms
 python-decouple
-arrow
 requests
 openpyxl
 pyodbc
