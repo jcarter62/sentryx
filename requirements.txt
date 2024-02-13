@@ -1,6 +1,7 @@
 django
 django-import-export
 django-crispy-forms
+django-cors-headers
 python-decouple
 requests
 openpyxl

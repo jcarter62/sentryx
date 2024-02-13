@@ -46,11 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     "export.apps.ExportConfig",
-    "home.apps.HomeConfig"
+    "home.apps.HomeConfig",
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -113,6 +115,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# cors headers
+originlist = config('CORS_ALLOWED_ORIGINS', default=None)
+if originlist is not None:
+    CORS_ALLOWED_ORIGINS = originlist.split(',')
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
+originlist = []
+
+# cors whitelist
+whitelist = config('CORS_ORIGIN_WHITELIST', default=None)
+if whitelist is not None:
+    CORS_ORIGIN_WHITELIST = whitelist.split(',')
+else:
+    CORS_ORIGIN_WHITELIST = []
+whitelist = []
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
