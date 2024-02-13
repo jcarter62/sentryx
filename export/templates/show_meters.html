@@ -23,9 +23,12 @@
                 <div class="row" onclick='rowClick("{{ m.socket_id }}");'>
                         <div class="col-2">{{ m.socket_id }}</div>
                         <div class="col-2">{{ m.meter_serial_number }}</div>
-                        <div class="col-8">{{ m.meter_address_1 }}</div>
+                        <div class="col-6">{{ m.meter_address_1 }}</div>
+                        <div class="col-1" id="{{ m.socket_id }}reads"></div>
+                        <div class="col-1" id="{{ m.socket_id }}trans"></div>
                 </div> <!-- row -->
             {% endfor %}
+
             <div class="pagination">
                 <span class="step-links">
                     {% if page_obj.has_previous %}
@@ -51,5 +54,27 @@
             let url = "{% url 'show_meter' 'ZZZ' %}".replace("ZZZ", id);
             window.location = url;
         }
+
+        function show_meter_icon(id, idreads, idtrans) {
+            let url = "/meter-status/" + id;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let reads = document.getElementById(idreads);
+                    let trans = document.getElementById(idtrans);
+
+                    if ( data.result.readings == "yes" ) {
+                        reads.innerHTML = "<img src='{% static 'chart-bar.svg' %}' title='Readings' width='20' height='20'>";
+                    }
+                    if ( data.result.transactions == "yes" ) {
+                        trans.innerHTML = "<img src='{% static 'calculator.svg' %}' title='Transactions' width='20' height='20'>";
+                    }
+                });
+        }
+
+        {% for m in page_obj %}
+            show_meter_icon("{{ m.socket_id }}", "{{ m.socket_id }}reads", "{{ m.socket_id }}trans");
+        {% endfor %}
+
     </script>
 {% endblock %}

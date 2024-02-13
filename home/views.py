@@ -69,3 +69,20 @@ def view_get_param(request, session, key):
     return JsonResponse(data)
 
 
+def view_get_meter_status(request, meter_id):
+    result = ''
+    code = 404
+    import requests
+    api = config('SENTRYXAPI', default='')
+    url = api + '/api/v1/meter-status/' + meter_id
+    headers = {'Content-Type': 'application/json'}
+
+    r = requests.request('GET', url, headers=headers)
+    result = r.status_code
+    if result == 200:
+        code = 200
+        result = r.json()['data']
+
+    data = {"result": result, "code": code }
+    return JsonResponse(data)
+
