@@ -8,5 +8,4 @@ openpyxl
 pyodbc
 pandas
 plotly
-kaleido
-kaleido
+
