@@ -131,6 +131,13 @@ else:
     CORS_ORIGIN_WHITELIST = []
 whitelist = []
 
+# cors trusted origins
+trusted = config('CSRF_TRUSTED_ORIGINS', default=None)
+if trusted is not None:
+    CSRF_TRUSTED_ORIGINS = trusted.split(',')
+else:
+    CSRF_TRUSTED_ORIGINS = []
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
