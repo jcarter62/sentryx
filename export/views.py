@@ -7,6 +7,7 @@ import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from decouple import config
 from export.plotting import Plotting
+import time
 
 def export_view(request):
     return render(request, "export.html", {})
@@ -110,12 +111,12 @@ def export_show_meters(request):
 def show_one_meter_detail(request, meter_id):
 
     meter = get_one_meter(meter_id)
-    meter_readings = get_meter_readings(meter_id)
-    dest_folder = config('PLOTDEST', default='')
+    # meter_readings = get_meter_readings(meter_id)
+    meter_readings = []
+    # dest_folder = config('PLOTDEST', default='')
     # plotting = Plotting()
     # plot_file = plotting.plot_readings(meter_id, meter_readings, dest_folder)
     plot_file = ''
-
 
     sgma_usage = get_sgma_usage(meter_id)
     return render(request,
@@ -232,3 +233,7 @@ def generate_meter_plot(request, meter_id):
     finally:
         data = {"plotfile": plotfile, "code": code }
         return JsonResponse(data)
+
+def generate_sgma_transactions(request, meter_id):
+    pass
+
