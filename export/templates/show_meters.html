@@ -21,11 +21,14 @@
 
             {% for m in page_obj %}
                 <div class="row meter-row" onclick='rowClick("{{ m.socket_id }}");'>
-                        <div class="col-2">{{ m.socket_id }}</div>
-                        <div class="col-2">{{ m.meter_serial_number }}</div>
-                        <div class="col-6">{{ m.meter_address_1 }}</div>
+                        <div class="col-1">{{ m.socket_id }}</div>
+                        <div class="col-1">{{ m.meter_serial_number }}</div>
+                        <div class="col-4">{{ m.meter_address_1 }}</div>
                         <div class="col-1" id="{{ m.socket_id }}reads"></div>
                         <div class="col-1" id="{{ m.socket_id }}trans"></div>
+                        <div class="col-1 invisible" id="{{ m.socket_id }}spin">
+                            <object type="image/svg+xml" data="{% static 'spinner.svg' %}" height="25" width="25"></object>
+                        </div>
                 </div> <!-- row -->
             {% endfor %}
 
@@ -51,6 +54,10 @@
     </div> <!-- container -->
     <script type="text/javascript">
         function rowClick(id) {
+            let spin = document.getElementById(id + "spin");
+            spin.classList.remove("invisible");
+            spin.classList.add("visible");
+
             let url = "{% url 'show_meter' 'ZZZ' %}".replace("ZZZ", id);
             window.location = url;
         }

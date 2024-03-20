@@ -58,3 +58,11 @@ img.yellow {
 .meter-row-dark:hover {
     background-color: #042a3f;
 }
+
+.visible {
+    visibility: visible;
+}
+
+.invisible {
+    visibility: hidden;
+}
