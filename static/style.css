@@ -50,3 +50,11 @@ img.yellow {
 .iframe-embed {
 
 }
+
+.meter-row-light:hover {
+    background-color: #59baf8;
+}
+
+.meter-row-dark:hover {
+    background-color: #042a3f;
+}

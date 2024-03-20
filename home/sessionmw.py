@@ -28,6 +28,10 @@ class SessionMiddleware(MiddlewareMixin):
                             path='/',
                             expires=datetime.now() + timedelta(days=365))
         response.set_cookie('page_size', self.page_size)
+        if 'Cf-Access-Authenticated-User-Email' in request.headers:
+            response.set_cookie('cfusername', request.headers['Cf-Access-Authenticated-User-Email'])
+        else:
+            response.set_cookie('cfusername', '')
         return response
 
 

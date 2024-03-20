@@ -20,7 +20,7 @@
             </div>
 
             {% for m in page_obj %}
-                <div class="row" onclick='rowClick("{{ m.socket_id }}");'>
+                <div class="row meter-row" onclick='rowClick("{{ m.socket_id }}");'>
                         <div class="col-2">{{ m.socket_id }}</div>
                         <div class="col-2">{{ m.meter_serial_number }}</div>
                         <div class="col-6">{{ m.meter_address_1 }}</div>
@@ -77,4 +77,5 @@
         {% endfor %}
 
     </script>
+
 {% endblock %}

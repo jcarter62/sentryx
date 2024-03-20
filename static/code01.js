@@ -123,6 +123,21 @@ function set_theme() {
         htmltag.removeAttribute("data-bs-theme");
     }
 
+    const meter_rows = document.getElementsByClassName("meter-row");
+    if ( dark_mode == "on" ) {
+        for (let i = 0; i < meter_rows.length; i++) {
+            meter_rows[i].classList.add("meter-row-dark");
+            meter_rows[i].classList.remove("meter-row-light");
+        }
+    } else {
+        for (let i = 0; i < meter_rows.length; i++) {
+            meter_rows[i].classList.add("meter-row-light");
+            meter_rows[i].classList.remove("meter-row-dark");
+        }
+    }
+
+
+
     // const othertag = document.getElementById("icon-image");
     // if ( dark_mode == "on" ) {
     //     othertag.classList.add("invert");
