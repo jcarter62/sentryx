@@ -3,8 +3,26 @@
 {% block content %}
     <div class="container">
             <div class="row">
-                <div class="col-10">
-                    <h1>Meter List:</h1>
+                <div class="col-2" id="data_title">
+                        <h1>Meter List:</h1>
+                </div>
+                <div class="col-2" id="active_inactive">
+                        {% if show_active_meters == 'true' %}
+                            Active Meters
+                        {% else %}
+                            InActive Meters
+                        {% endif %}
+                </div>
+                <div class="col-4">&nbsp;</div>
+                <div class="col-2" id="showMtrs">
+                    <label for="showActiveMeters">Show Only Active Meters</label>
+                    <input type="checkbox" id="showActiveMeters"
+                           name="showActiveMeters" value="showActiveMeters"
+                           onchange="save_meter_type();"
+                    {% if show_active_meters == 'true' %}
+                           checked
+                    {% endif %}
+                    >
                 </div>
                 <div class="col-1" id="export1">
                     <a href="{% url 'export-2-excel' %}" class="btn">
@@ -49,7 +67,6 @@
                     {% endif %}
                 </span>
             </div>
-            <hr>
         <hr>
     </div> <!-- container -->
     <script type="text/javascript">
@@ -82,6 +99,43 @@
         {% for m in page_obj %}
             show_meter_icon("{{ m.socket_id }}", "{{ m.socket_id }}reads", "{{ m.socket_id }}trans");
         {% endfor %}
+
+        function meter_type_change() {
+            let showActiveMeters = document.getElementById("showActiveMeters");
+            if ( showActiveMeters.checked ) {
+                showActiveMeters.value = "true";
+                // save the value to cookie
+                document.cookie = "show_active_meters=true";
+            } else {
+                showActiveMeters.value = "false";
+                // save the value to cookie
+                document.cookie = "show_active_meters=false";
+            }
+        }
+
+        function save_meter_type() {
+            let item = document.getElementById("showActiveMeters");
+            if ( item.checked ) {
+                setCookie('show_active_meters', 'true', 30, "/");
+                save_meter_type_session('true')
+            } else {
+                setCookie('show_active_meters', 'false', 30, "/");
+                save_meter_type_session('false')
+            }
+            window.location = ".";
+        }
+
+        function save_meter_type_session(value) {
+            let session = getCookie("id");
+            let key_name = "show_active_meters";
+            if (value === "") {
+                value = "true";
+            }
+            let url = "/params/set/" + session + "/" + key_name + "/" + value;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => { });
+        }
 
     </script>
 

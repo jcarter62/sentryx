@@ -13,10 +13,14 @@ def export_view(request):
     return render(request, "export.html", {})
 
 
-def get_meters():
+def get_meters(meter_status = 'true'):
     import requests
     api = config('SENTRYXAPI', default='')
     url = api + '/api/v1/meters'
+    if meter_status == 'true':
+        url = url + '/active'
+    else:
+        url = url + '/inactive'
     headers = {'Content-Type': 'application/json'}
     r = requests.request('POST', url, headers=headers)
     result = r.status_code
@@ -86,10 +90,11 @@ def get_sgma_usage(meter_id):
 def export_show_meters(request):
     # load search term from request.COOKIES
     search_term = request.COOKIES.get('search_term', '')
+    show_active_meters = request.COOKIES.get('show_active_meters', 'true')
 
     import requests
 
-    meters = get_meters()
+    meters = get_meters(show_active_meters)
 
     meter_list = []
     if search_term != '':
@@ -104,7 +109,12 @@ def export_show_meters(request):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, "show_meters.html", {'page_obj': page_obj, 'meters': meter_list})
+    context = {
+        'page_obj': page_obj,
+        'meters': meter_list,
+        'show_active_meters': show_active_meters,
+    }
+    return render(request, "show_meters.html", context=context)
 
 
 @login_required
@@ -135,8 +145,8 @@ def show_one_full_meter_detail(request, meter_id):
 
 
 def export_2_excel(request):
-
-    meter_list = get_meters()
+    show_active_meters = request.COOKIES.get('show_active_meters', 'true')
+    meter_list = get_meters(show_active_meters)
 
     # Get the Excel file
     excel_file = objects_to_excel_in_memory(meter_list)
@@ -177,8 +187,8 @@ def export_2_csv(request):
     """
     A Django view that returns a CSV file as a response.
     """
-
-    meter_list = get_meters()
+    show_active_meters = request.COOKIES.get('show_active_meters', 'true')
+    meter_list = get_meters(show_active_meters)
 
     # Get the CSV file
     csv_file = objects_to_csv_in_memory(meter_list)
